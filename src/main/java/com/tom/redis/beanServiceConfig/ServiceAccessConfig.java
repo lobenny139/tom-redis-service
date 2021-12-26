@@ -1,5 +1,7 @@
 package com.tom.redis.beanServiceConfig;
 
+import com.tom.redis.service.IRedisService;
+import com.tom.redis.service.provider.RedisService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -18,7 +20,6 @@ public class ServiceAccessConfig {
 
     /**
      * 配置redisTemplate针对不同key和value场景下不同序列化的方式
-     *
      * @param factory Redis连接工厂
      * @return
      */
@@ -37,5 +38,14 @@ public class ServiceAccessConfig {
         return template;
     }
 
-
+    /**
+     * 定義redisService
+     * @param redisTemplate
+     * @return
+     */
+    @Bean(name = "redisService" )
+    public IRedisService redisService(RedisTemplate redisTemplate) {
+        int database = 1; //使用第1個資料庫, 0~15, 0 讓給cache使用
+        return new RedisService(database, redisTemplate);
+    }
 }
