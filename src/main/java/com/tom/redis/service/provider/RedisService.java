@@ -1,10 +1,8 @@
 package com.tom.redis.service.provider;
 
 import com.tom.redis.service.IRedisService;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Component
 @Service
-//@AllArgsConstructor
 public class RedisService implements IRedisService {
 
     private static Logger logger = LoggerFactory.getLogger(RedisService.class);

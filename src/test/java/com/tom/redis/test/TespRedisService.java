@@ -5,13 +5,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = com.tom.redis.TestApplication.class)
@@ -33,7 +29,7 @@ public class TespRedisService {
 
     @Test
     public void testDel(){
-        redisService.del(-1,"key-0", "key-00");
+        redisService.del("key-0", "key-00");
     }
 
 }
