@@ -45,7 +45,8 @@ public class ServiceAccessConfig {
      */
     @Bean(name = "redisService" )
     public IRedisService redisService(RedisTemplate redisTemplate) {
-        int database = 1; //使用第1個資料庫, 0~15, 0 讓給cache使用
-        return new RedisService(database, redisTemplate);
+        RedisService redisService = new RedisService();
+        redisService.setRedisTemplate(redisTemplate);
+        return redisService;
     }
 }

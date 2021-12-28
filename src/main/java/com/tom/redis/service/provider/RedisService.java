@@ -27,48 +27,58 @@ import java.util.concurrent.TimeUnit;
 @Setter
 @Component
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class RedisService implements IRedisService {
 
     private static Logger logger = LoggerFactory.getLogger(RedisService.class);
 
-    private int database;
+    @Autowired(required = true)
+    @Qualifier(value = "redisTemplate")
+    protected RedisTemplate<String, Object> redisTemplate;
 
-    public void setDatabase(int database) {
-        this.database = database;
-        ((JedisConnectionFactory) Objects.requireNonNull(this.getRedisTemplate().getConnectionFactory())).setDatabase(database);
+    protected void setDatabase(int dbIndex) {
+        if(dbIndex < 0 || dbIndex > 16){
+            throw new RuntimeException("DB index must between 1 and 16");
+        }
+        ((JedisConnectionFactory)this.getRedisTemplate().getConnectionFactory()).setDatabase(dbIndex);
     }
 
     protected int getDatabase(){
         return ((JedisConnectionFactory)this.getRedisTemplate().getConnectionFactory()).getDatabase();
     }
 
-    @Autowired(required = true)
-    @Qualifier(value = "redisTemplate")
-    protected RedisTemplate<String, Object> redisTemplate;
+    @Override
+    public Object get(int dbIndex, String key) {
+        if(key == null){return null;}
+        logger.info("Try to get object[key=" + key +"] from redis[" + dbIndex + "]");
+        setDatabase(dbIndex);
+        Object value = redisTemplate.opsForValue().get(key);
+        logger.info("Success get object[key=" + key +"] from redis[" + dbIndex + "]");
+        return value;
+    }
 
 
     @Override
     public Object get(String key) {
-        if(key == null){return null;}
-        setDatabase(database);
-        logger.info("Try to get object[key=" + key +"] from redis[" + getDatabase() + "]");
-        Object value = redisTemplate.opsForValue().get(key);
-        logger.info("Success get object[key=" + key +"] from redis[" + getDatabase() + "]");
-        return value;
+        return get(0, key);
     }
 
     @Override
     public boolean set(String key, Object value) {
-        setDatabase(database);
-        return set(key, value, 0);
+        return set(0, key, value, 0);
     }
 
     @Override
     public boolean set(String key, Object value, long time) {
-        setDatabase(database);
+        return set(0, key, value, time);
+    }
+
+    @Override
+    public boolean set(int dbIndex, String key, Object value, long time)  {
         try {
-            logger.info("Try to put object[key=" + key +"] into redis[" + getDatabase() + "]");
+            if(key == null){throw new Exception("Key Can't be null.");}
+            logger.info("Try to put object[key=" + key +"] into redis[" + dbIndex + "]");
+            setDatabase(dbIndex);
             redisTemplate.opsForValue().set(key, value);
             if (time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
@@ -76,11 +86,24 @@ public class RedisService implements IRedisService {
             }else{
                 redisTemplate.opsForValue().set(key, value);
             }
-            logger.info("Success put object[key=" + key +"] into redis[" + getDatabase() + "]");
+            logger.info("Success put object[key=" + key +"] into redis[" + dbIndex + "]");
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            throw new RuntimeException(e);
         }
     }
+
+    public void del(int dbIndex, String... keys) {
+        setDatabase(dbIndex);
+        if (keys != null && keys.length > 0) {
+            for(String key : keys){
+                redisTemplate.delete(key);
+            }
+        }
+    }
+
+    public void del( String... keys) {
+        del(0, keys);
+    }
+
 }

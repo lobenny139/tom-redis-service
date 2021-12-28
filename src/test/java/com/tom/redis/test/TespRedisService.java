@@ -23,12 +23,17 @@ public class TespRedisService {
     private IRedisService redisService;
 
     @Test
-    public void test() {
-        redisService.set("benny", "那為什麼會卡住呢？");
+    public void testString() {
+        redisService.set(0,"key-0", "hi benny", 60);
+        System.out.println(redisService.get(0, "key-0"));
+        redisService.set("key-00", "hi benny00", 60);
+        //redisService.del(0,"key-00");
+        System.out.println(redisService.get(0, "key-00"));
+    }
 
-
-        System.out.println(redisService.get("benny"));
-
+    @Test
+    public void testDel(){
+        redisService.del(-1,"key-0", "key-00");
     }
 
 }
