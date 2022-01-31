@@ -34,7 +34,7 @@ public class RedisService implements IRedisService {
 
     protected void setDatabase(int dbIndex) {
         if(dbIndex < 0 || dbIndex > 16){
-            throw new RuntimeException("DB index must between 1 and 16");
+            throw new RuntimeException("資料庫的值只能為 0~15");
         }
         ((JedisConnectionFactory)this.getRedisTemplate().getConnectionFactory()).setDatabase(dbIndex);
     }
@@ -46,10 +46,10 @@ public class RedisService implements IRedisService {
     @Override
     public Object get(int dbIndex, String key) {
         if(key == null){return null;}
-        logger.info("Try to get object[key=" + key +"] from redis[" + dbIndex + "]");
+        logger.info("嘗試從Redis[" + dbIndex + "]取键值[" + key +"]");
         setDatabase(dbIndex);
         Object value = redisTemplate.opsForValue().get(key);
-        logger.info("Success get object[key=" + key +"] from redis[" + dbIndex + "]");
+        logger.info("成功從Redis[" + dbIndex + "]取得键值[" + key +"]");
         return value;
     }
 
@@ -74,30 +74,38 @@ public class RedisService implements IRedisService {
         try {
             if(key == null){throw new Exception("Key Can't be null.");}
             logger.info("Try to put object[key=" + key +"] into redis[" + dbIndex + "]");
+            logger.info("嘗試放入键/值[" + key +"/" + value+"]到Redis[" + dbIndex + "]");
             setDatabase(dbIndex);
             redisTemplate.opsForValue().set(key, value);
             if (time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
-                logger.info("Object[key=" + key +"] will expired in " + time + " second(s) later");
+                logger.info("键[" + key +"]的有效期為 " + time + " 秒後");
             }else{
                 redisTemplate.opsForValue().set(key, value);
             }
-            logger.info("Success put object[key=" + key +"] into redis[" + dbIndex + "]");
+            logger.info("成功放入键/值[" + key +"/" + value+"]到Redis[" + dbIndex + "]");
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
+    @Override
     public void del(int dbIndex, String... keys) {
-        setDatabase(dbIndex);
-        if (keys != null && keys.length > 0) {
-            for(String key : keys){
-                redisTemplate.delete(key);
+        try {
+            setDatabase(dbIndex);
+            if (keys != null && keys.length > 0) {
+                for (String key : keys) {
+                    logger.info("從Redis[" + dbIndex + "]中刪除键[" + key + "]");
+                    getRedisTemplate().delete(key);
+                }
             }
+        }catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
+    @Override
     public void del( String... keys) {
         del(0, keys);
     }
