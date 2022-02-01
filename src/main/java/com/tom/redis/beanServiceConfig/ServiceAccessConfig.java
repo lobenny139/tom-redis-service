@@ -27,6 +27,7 @@ public class ServiceAccessConfig {
         return new JedisConnectionFactory();
     }
 
+
     /**
      * 配置redisTemplate针对不同key和value场景下不同序列化的方式
      * @return
@@ -45,6 +46,7 @@ public class ServiceAccessConfig {
         template.afterPropertiesSet();
         return template;
     }
+
 
     /**
      * 定義redisService
