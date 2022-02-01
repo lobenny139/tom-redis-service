@@ -23,7 +23,7 @@ public class ServiceAccessConfig {
     * Redis连接工厂
     */
     @Bean(name= "jedisConnectionFactory")
-    public JedisConnectionFactory redisConnectionFactory() {
+    public JedisConnectionFactory jedisConnectionFactory() {
         return new JedisConnectionFactory();
     }
 
@@ -33,9 +33,9 @@ public class ServiceAccessConfig {
      */
     @Primary
     @Bean(name = "redisTemplate")
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate( ) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory( redisConnectionFactory() );
+        template.setConnectionFactory( jedisConnectionFactory() );
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         template.setKeySerializer(stringRedisSerializer);
         template.setHashKeySerializer(stringRedisSerializer);
@@ -60,11 +60,11 @@ public class ServiceAccessConfig {
      * @return
      */
     @Bean(name="redisMessageListenerContainer")
-    public RedisMessageListenerContainer listenerContainer( JedisConnectionFactory jedisConnectionFactory) {
+    public RedisMessageListenerContainer listenerContainer( ) {
         // 創建RedisMessageListenerContainer對象
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
         // 設置 RedisConnection 工廠，多種 JavaRedis客戶端接入工廠
-        redisMessageListenerContainer.setConnectionFactory( jedisConnectionFactory );
+        redisMessageListenerContainer.setConnectionFactory( jedisConnectionFactory() );
         // 添加監聽器
 //        redisMessageListenerContainer.addMessageListener(new DemoChannelTopicMessageListener(), new ChannelTopic("demoChannel"));
         redisMessageListenerContainer.addMessageListener(new RedisMessageListener(), new ChannelTopic("myTopic"));
