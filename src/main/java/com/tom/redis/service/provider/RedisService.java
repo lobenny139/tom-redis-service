@@ -33,45 +33,28 @@ public class RedisService implements IRedisService {
     @Qualifier(value = "redisTemplate")
     protected RedisTemplate<String, Object> redisTemplate;
 
-//    @Autowired(required = true)
-//    @Qualifier(value = "jedisConnectionFactory")
-//    protected JedisConnectionFactory jedisConnectionFactory;
-
-    protected void setDatabase(int dbIndex) {
-        if(dbIndex < 0 || dbIndex > 16){
-            throw new RuntimeException("資料庫的值只能為 0~15");
-        }
-        //getRedisTemplate().setConnectionFactory(jedisConnectionFactory);
-    }
-
-    protected int getDatabase(){
-        return ((JedisConnectionFactory)this.getRedisTemplate().getConnectionFactory()).getDatabase();
-    }
-
     @Override
-    public Object get(int dbIndex, String key) {
+    public Object get(String key) {
         if(key == null){return null;}
-        logger.info("嘗試從Redis[" + dbIndex + "]取键值[" + key +"]");
-        setDatabase(dbIndex);
+        logger.info("嘗試從Redis取键值[" + key +"]");
         Object value = getRedisTemplate().opsForValue().get(key);
-        logger.info("成功從Redis[" + dbIndex + "]取得键值[" + key +"]");
+        logger.info("成功從Redis取得键值[" + key +"]");
         return value;
     }
 
 
     @Override
-    public boolean set(int dbIndex, String key, Object value, long time)  {
+    public boolean set( String key, Object value, long time)  {
         try {
             if(key == null){throw new Exception("Key Can't be null.");}
-            logger.info("嘗試放入鍵/值[" + key +"/" + value+"]到Redis[" + dbIndex + "]");
-            setDatabase(1);
+            logger.info("嘗試放入鍵/值[" + key +"/" + value+"]到Redis");
             if (time > 0) {
                 getRedisTemplate().opsForValue().set(key, value, time, TimeUnit.SECONDS);
                 logger.info("鍵[" + key +"]的有效期為 " + time + " 秒後");
             }else{
                 getRedisTemplate().opsForValue().set(key, value);
             }
-            logger.info("成功放入鍵/值[" + key +"/" + value+"]到Redis[" + dbIndex + "]");
+            logger.info("成功放入鍵/值[" + key +"/" + value+"]到Redis");
             return true;
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -79,31 +62,20 @@ public class RedisService implements IRedisService {
     }
 
 
-
-
-    @Override
-    public Object get(String key) {
-        return get(0, key);
-    }
-
     @Override
     public boolean set(String key, Object value) {
-        return set(0, key, value, 0);
-    }
-
-    @Override
-    public boolean set(String key, Object value, long time) {
-        return set(0, key, value, time);
+        return set(key, value, 0);
     }
 
 
+
+
     @Override
-    public void del(int dbIndex, String... keys) {
+    public void del(String... keys) {
         try {
-            setDatabase(dbIndex);
             if (keys != null && keys.length > 0) {
                 for (String key : keys) {
-                    logger.info("從Redis[" + dbIndex + "]中刪除键[" + key + "]");
+                    logger.info("從Redis中刪除键[" + key + "]");
                     getRedisTemplate().delete(key);
                 }
             }
@@ -112,9 +84,5 @@ public class RedisService implements IRedisService {
         }
     }
 
-    @Override
-    public void del( String... keys) {
-        del(0, keys);
-    }
 
 }

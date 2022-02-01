@@ -20,8 +20,8 @@ public class TespRedisService {
 
     @Test
     public void testString() {
-        redisService.set(1,"key-0", "hi benny", 60);
-        System.out.println(redisService.get(1, "key-0"));
+        redisService.set("key-0", "hi benny", 60);
+        System.out.println(redisService.get("key-0"));
         //redisService.set("key-00", "hi benny00", 60);
         //redisService.del(0,"key-00");
         //System.out.println(redisService.get(0, "key-00"));
