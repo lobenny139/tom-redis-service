@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = com.tom.redis.TestApplication.class)
 @TestPropertySource(locations = "/test-application.properties")
@@ -24,8 +27,18 @@ public class TespRedisService {
         System.out.println(redisService.get("key-0"));
         //redisService.set("key-00", "hi benny00", 60);
         //redisService.del(0,"key-00");
-        //System.out.println(redisService.get(0, "key-00"));
+        System.out.println(redisService.get("key-00"));
     }
+
+    @Test
+    public void testMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("a", "map-a");
+        map.put("b", "map-b");
+        redisService.set("ab", map, 60);
+        System.out.println(redisService.get("ab"));
+    }
+
 
     @Test
     public void testDel(){

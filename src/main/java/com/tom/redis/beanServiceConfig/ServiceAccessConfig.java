@@ -5,10 +5,7 @@ import com.tom.redis.service.IRedisService;
 import com.tom.redis.service.provider.PubService;
 import com.tom.redis.service.provider.RedisService;
 import om.tom.redis.messageListener.RedisMessageListener;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.*;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,23 +17,34 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class ServiceAccessConfig {
     /*
-    * Redis连接工厂
-    */
-    @Bean(name= "jedisConnectionFactory")
-    public JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+     * Redis连接工厂
+     */
+    @Bean
+    public JedisConnectionFactory jedisConnectionFactory0() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setDatabase(0);
+        return jedisConnectionFactory;
     }
 
+    /*
+     * Redis连接工厂
+     */
+    @Bean
+    public JedisConnectionFactory jedisConnectionFactory1() {
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory();
+        jedisConnectionFactory.setDatabase(1);
+        return jedisConnectionFactory;
+    }
 
     /**
      * 配置redisTemplate针对不同key和value场景下不同序列化的方式
      * @return
      */
     @Primary
-    @Bean(name = "redisTemplate")
-    public RedisTemplate<String, Object> redisTemplate( ) {
+    @Bean(name = "redisTemplate0")
+    public RedisTemplate<String, Object> redisTemplate0( ) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory( jedisConnectionFactory() );
+        template.setConnectionFactory( jedisConnectionFactory0() );
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         template.setKeySerializer(stringRedisSerializer);
         template.setHashKeySerializer(stringRedisSerializer);
@@ -46,6 +54,26 @@ public class ServiceAccessConfig {
         template.afterPropertiesSet();
         return template;
     }
+
+    /**
+     * 配置redisTemplate针对不同key和value场景下不同序列化的方式
+     * @return
+     */
+    @Primary
+    @Bean(name = "redisTemplate1")
+    public RedisTemplate<String, Object> redisTemplate1( ) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory( jedisConnectionFactory1() );
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        template.setKeySerializer(stringRedisSerializer);
+        template.setHashKeySerializer(stringRedisSerializer);
+        Jackson2JsonRedisSerializer redisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        template.setValueSerializer(redisSerializer);
+        template.setHashValueSerializer(redisSerializer);
+        template.afterPropertiesSet();
+        return template;
+    }
+
 
 
     /**
@@ -66,7 +94,7 @@ public class ServiceAccessConfig {
         // 創建RedisMessageListenerContainer對象
         RedisMessageListenerContainer redisMessageListenerContainer = new RedisMessageListenerContainer();
         // 設置 RedisConnection 工廠，多種 JavaRedis客戶端接入工廠
-        redisMessageListenerContainer.setConnectionFactory( jedisConnectionFactory() );
+        redisMessageListenerContainer.setConnectionFactory( jedisConnectionFactory0() );
         // 添加監聽器
 //        redisMessageListenerContainer.addMessageListener(new DemoChannelTopicMessageListener(), new ChannelTopic("demoChannel"));
         redisMessageListenerContainer.addMessageListener(new RedisMessageListener(), new ChannelTopic("myTopic"));
