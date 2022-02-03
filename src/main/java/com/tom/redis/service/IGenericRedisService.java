@@ -1,6 +1,8 @@
 package com.tom.redis.service;
 
-public interface IRedisService {
+import java.util.List;
+
+public interface IGenericRedisService {
     /**
      * 普通缓存获取
      * @param key 键
@@ -26,13 +28,12 @@ public interface IRedisService {
      */
     public boolean set(String key, Object value, long time);
 
-
-
-
     /**
      * delete from redis
       * @param keys
      */
     public void del( String... keys);
+
+    public List<String> getAllKeys(String keyPreifx);
 
 }

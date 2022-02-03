@@ -1,6 +1,6 @@
 package com.tom.redis.test;
 
-import com.tom.redis.service.IRedisService;
+import com.tom.redis.service.IGenericRedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,8 @@ import java.util.Map;
 public class TespRedisService {
 
     @Autowired
-    @Qualifier(value = "redisService")
-    private IRedisService redisService;
+    @Qualifier(value = "genericRedisService")
+    private IGenericRedisService redisService;
 
     @Test
     public void testString() {
@@ -42,7 +42,23 @@ public class TespRedisService {
 
     @Test
     public void testDel(){
-        redisService.del("key-0", "key-00");
+        redisService.del("ab", "key-00");
+    }
+
+
+    @Test
+    public void testGetAllKeys(){
+        redisService.set("key-0", "hi benny0", 60);
+        redisService.set("kkey-1", "hi benny1", 60);
+        redisService.set("key-2", "hi benny2", 60);
+        redisService.set("key-4", "hi benny4", 60);
+        redisService.set("key-3", "hi benny3", 60);
+        redisService.set("kkey-5", "hi benny5", 60);
+        redisService.set("key-5", "hi benny55", 60);
+        redisService.set("key-6", "hi benny6", 60);
+        redisService.set("key-7", "hi benny7", 60);
+        redisService.set("key-9", "hi benny9", 60);
+        System.out.println(redisService.getAllKeys("kko"));
     }
 
 }
