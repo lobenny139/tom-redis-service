@@ -58,7 +58,7 @@ public class TespRedisService {
         redisService.set("key-6", "hi benny6", 60);
         redisService.set("key-7", "hi benny7", 60);
         redisService.set("key-9", "hi benny9", 60);
-        System.out.println(redisService.getAllKeys("kko"));
+        System.out.println(redisService.getAllKeys("kk"));
     }
 
 }

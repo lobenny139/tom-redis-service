@@ -30,8 +30,8 @@ public class GenericRedisService implements IGenericRedisService {
     private static Logger logger = LoggerFactory.getLogger(GenericRedisService.class);
 
     @Autowired(required = true)
-    @Qualifier(value = "redisTemplate9")
-    protected RedisTemplate<String, Object> redisTemplate;
+    @Qualifier(value = "redisTemplate0")
+    private RedisTemplate<String, Object> redisTemplate;
 
     protected int getDatabase(){
         return ((JedisConnectionFactory)this.getRedisTemplate().getConnectionFactory()).getDatabase();
