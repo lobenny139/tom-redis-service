@@ -1,5 +1,7 @@
 package com.tom.redis.test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tom.redis.service.IGenericRedisService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +24,7 @@ public class TespRedisService {
     private IGenericRedisService redisService;
 
     @Test
-    public void testString() {
+    public void testString() throws JsonProcessingException {
         redisService.set("key-0", "hi benny", 60);
         System.out.println(redisService.get("key-0"));
         //redisService.set("key-00", "hi benny00", 60);
@@ -31,11 +33,11 @@ public class TespRedisService {
     }
 
     @Test
-    public void testMap() {
+    public void testMap() throws JsonProcessingException {
         Map<String, String> map = new HashMap<>();
         map.put("a", "map-a");
         map.put("b", "map-b");
-        redisService.set("ab", map, 60);
+        redisService.set("ab", new ObjectMapper().writeValueAsString(map), 60);
         System.out.println(redisService.get("ab"));
     }
 
