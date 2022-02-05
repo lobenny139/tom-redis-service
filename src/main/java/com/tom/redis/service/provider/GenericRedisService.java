@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -39,14 +40,22 @@ public class GenericRedisService implements IGenericRedisService {
 
     @Override
     public Object get(String key) {
-        if(key == null){throw new RuntimeException("鍵值不能為空");}
-        Object value = getRedisTemplate().opsForValue().get(key);
-        if(value != null ){
-            logger.info("成功從Redis[{}]取得鍵值[{}]", getDatabase(), key);
-        }else{
-            logger.warn("鍵[{}]不存在於Redis[{}]", key, getDatabase());
+        try {
+            if (key == null) {
+                throw new RuntimeException("鍵值不能為空");
+            }
+            Object value = getRedisTemplate().opsForValue().get(key);
+            if (value != null) {
+                logger.info("成功從Redis[{}]取得鍵值[{}]", getDatabase(), key);
+            } else {
+                logger.warn("鍵[{}]不存在於Redis[{}]", key, getDatabase());
+            }
+            return value;
+        }catch(RedisConnectionFailureException e){
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
+        }catch(Exception e){
+            throw new RuntimeException(e);
         }
-        return value;
     }
 
     @Override
@@ -61,6 +70,8 @@ public class GenericRedisService implements IGenericRedisService {
             }
             logger.info("成功放入[{}/{}]到Redis[{}]", key, value, getDatabase());
             return true;
+        } catch(RedisConnectionFailureException e){
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
         } catch (Exception e) {
             logger.warn("不能放入[{}/{}]到Redis[{}]", key, value, getDatabase());
             throw new RuntimeException(e);
@@ -79,6 +90,8 @@ public class GenericRedisService implements IGenericRedisService {
                 getRedisTemplate().delete(Arrays.asList(keys));
                 logger.info("成功從Redis[{}]中刪除鍵{}", getDatabase(), Arrays.asList(keys) );
             }
+        }catch(RedisConnectionFailureException e){
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
