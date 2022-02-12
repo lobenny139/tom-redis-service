@@ -24,12 +24,25 @@ public class TespRedisService {
     private IGenericRedisService redisService;
 
     @Test
+    public void testIncr(){
+        System.out.println(redisService.incr("prod-1234567", 1000L));
+    }
+
+
+    @Test
+    public void testdecr(){
+        System.out.println(redisService.decr("prod-1234567", 1L));
+    }
+
+
+
+    @Test
     public void testString() throws JsonProcessingException {
         redisService.set("key-0", "hi benny", 60);
         System.out.println(redisService.get("key-0"));
         //redisService.set("key-00", "hi benny00", 60);
         //redisService.del(0,"key-00");
-        System.out.println(redisService.get("key-00"));
+        System.out.println(redisService.get("prod-1234567"));
     }
 
     @Test
@@ -64,3 +77,6 @@ public class TespRedisService {
     }
 
 }
+
+
+

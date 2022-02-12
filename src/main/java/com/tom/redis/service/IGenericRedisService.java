@@ -34,6 +34,34 @@ public interface IGenericRedisService {
      */
     public void del( String... keys);
 
+    /**
+     * get all keys list from redis
+     * @param keyPreifx
+     * @return
+     */
     public List<String> getAllKeys(String keyPreifx);
+
+    /**
+     * 判断key是否存在
+     * @param key
+     * @return
+     */
+    public boolean hasKey(String key);
+
+    /**
+     * 遞增
+     * @param key
+     * @param delta
+     * @return
+     */
+    public long incr(String key, long delta);
+
+    /**
+     * 遞減
+     * @param key
+     * @param delta
+     * @return
+     */
+    public long decr(String key, long delta);
 
 }

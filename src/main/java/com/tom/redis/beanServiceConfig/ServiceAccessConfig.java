@@ -65,6 +65,11 @@ public class ServiceAccessConfig {
         Jackson2JsonRedisSerializer redisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         template.setValueSerializer(redisSerializer);
         template.setHashValueSerializer(redisSerializer);
+
+        // 开启事务 true 不会主动关闭连接, false -> 主动关闭连接
+        // https://www.jianshu.com/p/c9f5718e58f0
+        template.setEnableTransactionSupport( false );
+
         template.afterPropertiesSet();
         return template;
     }
@@ -86,6 +91,11 @@ public class ServiceAccessConfig {
         Jackson2JsonRedisSerializer redisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         template.setValueSerializer(redisSerializer);
         template.setHashValueSerializer(redisSerializer);
+
+        // 开启事务 true 不会主动关闭连接, false -> 主动关闭连接
+        // https://www.jianshu.com/p/c9f5718e58f0
+        template.setEnableTransactionSupport( false );
+
         template.afterPropertiesSet();
         return template;
     }
@@ -107,6 +117,11 @@ public class ServiceAccessConfig {
         Jackson2JsonRedisSerializer redisSerializer = new Jackson2JsonRedisSerializer(Object.class);
         template.setValueSerializer(redisSerializer);
         template.setHashValueSerializer(redisSerializer);
+
+        // 开启事务 true 不会主动关闭连接, false -> 主动关闭连接
+        // https://www.jianshu.com/p/c9f5718e58f0
+        template.setEnableTransactionSupport( false );
+
         template.afterPropertiesSet();
         return template;
     }

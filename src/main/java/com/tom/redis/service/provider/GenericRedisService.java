@@ -116,6 +116,42 @@ public class GenericRedisService implements IGenericRedisService {
             }
             logger.info("成功從Redis[{}]中取得取得鍵(prefix={}), 共{}筆記錄.", getDatabase(), targetKey, redisKeys.size() );
             return keysList;
+        }catch(RedisConnectionFailureException e){
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean hasKey(String key) {
+        try{
+            return getRedisTemplate().hasKey(key);
+        }catch(RedisConnectionFailureException e){
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public long incr(String key, long delta) {
+        try{
+            return getRedisTemplate().opsForValue().increment(key, delta);
+        }catch(RedisConnectionFailureException e){
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public long decr(String key, long delta) {
+        try{
+            return getRedisTemplate().opsForValue().decrement(key, delta);
+        }catch(RedisConnectionFailureException e){
+            e.printStackTrace();
+            throw new RuntimeException("無法連接到redis服務器, " + e.toString());
         }catch(Exception e){
             throw new RuntimeException(e);
         }
