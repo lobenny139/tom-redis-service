@@ -38,11 +38,11 @@ public class TespRedisService {
 
     @Test
     public void testString() throws JsonProcessingException {
-        redisService.set("key-0", "hi benny", 60);
-        System.out.println(redisService.get("key-0"));
+        redisService.set("prod-1234", "200");
+        System.out.println(redisService.get("prod-1234"));
         //redisService.set("key-00", "hi benny00", 60);
         //redisService.del(0,"key-00");
-        System.out.println(redisService.get("prod-1234567"));
+        //System.out.println(redisService.get("prod-1234"));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TespRedisService {
 
     @Test
     public void testDel(){
-        redisService.del("ab", "key-00");
+        redisService.del("prod-1234", "key-00");
     }
 
 

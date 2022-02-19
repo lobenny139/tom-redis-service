@@ -24,10 +24,10 @@ public class Test控管領獎 {
 
     @Test
     public void ThreadTest(){
-        redisService.set("prod-1234",20);
-        for(int i = 0; i <= 10000; i++){
-            new Thread(new MyThread(System.currentTimeMillis())).start();
-        }
+        redisService.set("prod-1234",200);
+//        for(int i = 0; i <= 10000; i++){
+//            new Thread(new MyThread(System.currentTimeMillis())).start();
+//        }
     }
 
     class MyThread implements Runnable {
