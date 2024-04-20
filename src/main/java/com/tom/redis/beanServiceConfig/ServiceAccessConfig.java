@@ -4,7 +4,6 @@ import com.tom.redis.service.IGenericRedisService;
 import com.tom.redis.service.IPubService;
 import com.tom.redis.service.provider.GenericRedisService;
 import com.tom.redis.service.provider.PubService;
-import om.tom.redis.messageListener.RedisMessageListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
